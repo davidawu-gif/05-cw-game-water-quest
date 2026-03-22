@@ -18,126 +18,304 @@ Fonts:
 
 */
 
+:root {
+	--cw-yellow: #ffc907;
+	--cw-blue: #2e9df7;
+	--cw-light-blue: #8bd1cb;
+	--cw-green: #4fcb53;
+	--cw-dark: #183245;
+	--cw-orange: #ff902a;
+	--paper: #fffdf4;
+	--soil: #8b5a2b;
+	--shadow: 0 10px 30px rgba(15, 45, 65, 0.12);
+}
+
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 30px;
-  background-color: #f0f0f0;
-  color: #333;
+	margin: 0;
+	min-height: 100vh;
+	font-family: "Nunito", sans-serif;
+	font-size: 16px;
+	line-height: 1.35;
+	color: var(--cw-dark);
+	background:
+		radial-gradient(circle at 10% 20%, rgba(139, 209, 203, 0.5), transparent 40%),
+		radial-gradient(circle at 90% 10%, rgba(255, 201, 7, 0.35), transparent 35%),
+		linear-gradient(135deg, #f7fcff, #fef8e6);
 }
 
-.container {
-  max-width: 750px;
-  margin: 50px auto;
-  background-color: #fff;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+.top-bar {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	gap: 16px;
+	padding: 14px;
+	border-bottom: 2px solid rgba(24, 50, 69, 0.1);
+	background: rgba(255, 255, 255, 0.84);
+	backdrop-filter: blur(4px);
+}
+
+.brand-wrap {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+}
+
+.logo {
+	width: 125px;
+	max-width: 100%;
+}
+
+h1,
+h2,
+h3 {
+	margin: 0;
+	font-family: "Space Grotesk", sans-serif;
 }
 
 h1 {
-  text-align: center;
-  font-size: 30px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
+	font-size: clamp(1.5rem, 2.2vw, 2rem);
 }
 
-h1 img {
-  height: 50px;
-  margin-right: 15px;
-  display: block;
+.brand-wrap p {
+	margin: 4px 0 0;
 }
 
-.game-instructions {
-  font-size: 18px;
-  margin-bottom: 30px;
-  text-align: center;
+.donate-btn,
+.start-btn,
+.tool-btn,
+#advanceDayBtn,
+#refreshGlobalBtn {
+	border: 0;
+	border-radius: 12px;
+	font-family: inherit;
+	font-weight: 800;
+	font-size: 1rem;
+	min-height: 44px;
+	cursor: pointer;
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.stats {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 30px;
-  background-color: #f5f5f5;
-  padding: 15px 0;
-  border-radius: 8px;
+.donate-btn {
+	padding: 10px 16px;
+	background: var(--cw-yellow);
+	color: #4d3400;
+	box-shadow: var(--shadow);
 }
 
-.stats p {
-  margin: 0;
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
+.donate-btn:hover,
+.start-btn:hover,
+.tool-btn:hover,
+#advanceDayBtn:hover,
+#refreshGlobalBtn:hover {
+	transform: translateY(-2px);
 }
 
-.game-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin: 0 auto;
-  max-width: 500px;
+.game-shell {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 14px;
+	padding: 12px;
 }
 
-.grid-cell {
-  background-color: #e8e8e8;
-  border-radius: 8px;
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  position: relative;
-  overflow: hidden;
+.status-card,
+.garden-card,
+.leaderboard-card {
+	background: rgba(255, 255, 255, 0.9);
+	border-radius: 18px;
+	padding: 14px;
+	box-shadow: var(--shadow);
 }
 
-.water-can-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 70px;
-  height: 70px;
-  /* Ensure the wrapper is properly centered */
+.status-card p,
+.leaderboard-card p {
+	margin: 10px 0;
 }
 
-.water-can {
-  width: 100%;
-  height: 100%;
-  background-image: url('img/water-can.png');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  cursor: pointer;
-  border-radius: 50%;
-  animation: popUp 0.5s cubic-bezier(0.17, 0.67, 0.34, 2);
-  transform-origin: center; /* Ensure scaling happens from the center */
+.start-btn {
+	width: 100%;
+	margin-top: 8px;
+	padding: 10px 14px;
+	background: var(--cw-blue);
+	color: #fff;
 }
 
-@keyframes popUp {
-  0% {
-    transform: scale(0.5); /* Start scaling from the center */
-  }
-  100% {
-    transform: scale(1); /* End scaling at full size */
-  }
+.toolbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
 }
 
+.tool-buttons {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	width: 100%;
+}
 
-button {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  font-size: 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  display: block;
-  margin: 30px auto 0;
-  transition: background-color 0.2s;
+.tool-btn {
+	padding: 10px 12px;
+	flex: 1 1 140px;
+	background: #edf4f9;
+	color: var(--cw-dark);
+}
+
+.tool-btn.active {
+	background: var(--cw-blue);
+	color: #fff;
+}
+
+.debug-wrap {
+	margin-top: 12px;
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+#advanceDayBtn {
+	padding: 10px 12px;
+	background: var(--cw-orange);
+	color: #fff;
+}
+
+#refreshGlobalBtn {
+	padding: 10px 12px;
+	background: var(--cw-light-blue);
+	color: #15444c;
+}
+
+.hint,
+.feedback,
+.small-note {
+	margin: 10px 0;
+}
+
+.feedback {
+	min-height: 22px;
+	font-weight: 700;
+}
+
+.garden-grid {
+	margin-top: 12px;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(90px, 1fr));
+	gap: 8px;
+}
+
+.garden-tile {
+	aspect-ratio: 1 / 1;
+	min-height: 90px;
+	border: 2px solid #5e3d22;
+	border-radius: 14px;
+	background:
+		radial-gradient(circle at 30% 30%, #a06a34, transparent 42%),
+		linear-gradient(160deg, #9e6731, var(--soil));
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	cursor: pointer;
+}
+
+.crop {
+	width: 90%;
+	height: 90%;
+	border-radius: 50%;
+	display: grid;
+	place-items: center;
+	color: #16411f;
+	font-size: 1.45rem;
+	font-weight: 800;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.stage-0 { background: rgba(114, 177, 78, 0.4); }
+.stage-1 { background: rgba(96, 177, 69, 0.52); }
+.stage-2 { background: rgba(75, 185, 65, 0.62); }
+.stage-3 { background: rgba(62, 184, 61, 0.74); }
+.stage-4 { background: rgba(43, 172, 48, 0.82); }
+.stage-5 {
+	background: linear-gradient(140deg, #67c24f, #2f9d31);
+	color: #fffbe2;
+}
+
+.dead {
+	background: linear-gradient(140deg, #8f8f8f, #585858);
+	color: #f4f4f4;
+}
+
+.cooldown-tag,
+.ready-tag,
+.dead-tag {
+	position: absolute;
+	bottom: 4px;
+	left: 50%;
+	transform: translateX(-50%);
+	font-size: 0.65rem;
+	font-weight: 800;
+	background: rgba(255, 255, 255, 0.86);
+	border-radius: 999px;
+	padding: 2px 6px;
+}
+
+.dead-tag {
+	background: #ffe4e1;
+	color: #7d1f15;
+}
+
+.leaderboard-card ol {
+	margin-top: 8px;
+	padding-left: 20px;
+}
+
+.leaderboard-card li {
+	margin: 4px 0;
+}
+
+@media (max-width: 1000px) {
+	.garden-grid {
+		grid-template-columns: repeat(4, minmax(74px, 1fr));
+	}
+}
+
+@media (min-width: 1000px) {
+	.top-bar {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		padding: 20px;
+	}
+
+	.game-shell {
+		grid-template-columns: 1fr 1.4fr 1fr;
+		gap: 20px;
+		padding: 20px;
+	}
+
+	.status-card,
+	.garden-card,
+	.leaderboard-card {
+		padding: 18px;
+	}
+
+	.garden-grid {
+		grid-template-columns: repeat(5, minmax(74px, 1fr));
+		gap: 10px;
+	}
+}
+
+@media (max-width: 560px) {
+	.logo {
+		width: 110px;
+	}
+
+	.garden-grid {
+		grid-template-columns: repeat(2, minmax(110px, 1fr));
+	}
 }

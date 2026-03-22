@@ -1,23 +1,72 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>Water Quest</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="theme-color" content="#ffc907" />
+	<title>Global Garden</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+	<link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Water Quest</h1>
-    <p class="game-instructions">Collect 20 items to complete the game!</p>
-    <div class="stats">
-      <p>Cans Collected: <span id="current-cans">0</span></p>
-      <p>Time Left: <span id="timer">30</span>s</p>
-    </div>
-    <div id="achievements" class="achievement"></div>
-    <div class="game-grid"></div>
-    <button id="start-game">Start Game</button>
-  </div>
-  <script src="script.js"></script>
+	<header class="top-bar">
+		<div class="brand-wrap">
+			<img src="img/cw_logo_horizontal.png" alt="charity: water logo" class="logo" />
+			<div>
+				<h1>Global Garden</h1>
+				<p>Grow crops. Grow awareness. Help bring clean water to everyone.</p>
+			</div>
+		</div>
+		<button id="donateBtn" class="donate-btn" type="button">Donate</button>
+	</header>
+
+	<main class="game-shell">
+		<section class="status-card">
+			<h2>World Status</h2>
+			<p><strong>Population without clean water:</strong> <span id="globalPercent">--</span>%</p>
+			<p id="worldCondition" role="status" aria-live="polite">Checking global data...</p>
+			<p><strong>Simulated Date:</strong> <span id="simDate">--</span></p>
+			<p><strong>Lifetime Score:</strong> <span id="scoreValue">0</span></p>
+			<p><strong>Donation Clicks:</strong> <span id="donationValue">0</span></p>
+			<button id="startBtn" class="start-btn" type="button">Load Garden</button>
+		</section>
+
+		<section class="garden-card">
+			<div class="toolbar">
+				<h2>Actions</h2>
+				<div class="tool-buttons">
+					<button class="tool-btn active" data-tool="seed" type="button">🌱 Plant</button>
+					<button class="tool-btn" data-tool="water" type="button">💧 Water</button>
+					<button class="tool-btn" data-tool="hand" type="button">✋ Harvest / Clear</button>
+				</div>
+			</div>
+
+			<div class="debug-wrap">
+				<button id="advanceDayBtn" type="button">Debug: Advance +24h</button>
+				<button id="refreshGlobalBtn" type="button">Refresh Global %</button>
+			</div>
+
+			<p class="hint" id="hintText">Select a tool, then tap a garden tile.</p>
+			<p class="feedback" id="feedbackText" role="status" aria-live="polite"></p>
+
+			<div id="gardenGrid" class="garden-grid" aria-label="Garden area"></div>
+		</section>
+
+		<section class="leaderboard-card">
+			<h2>Global Leaderboard (Demo)</h2>
+			<p class="small-note">This is a demo board with sample players plus your current totals.</p>
+
+			<h3>Top Harvest Scores</h3>
+			<ol id="scoreBoard"></ol>
+
+			<h3>Top Donation Totals</h3>
+			<ol id="donationBoard"></ol>
+		</section>
+	</main>
+
+	<script src="script.js"></script>
 </body>
 </html>
+

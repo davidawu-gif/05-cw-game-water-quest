@@ -345,7 +345,6 @@ function advanceDay() {
 }
 
 async function fetchGlobalNoAccessPercent() {
-	// Replace this with a real API source when available.
 	return 26;
 }
 
@@ -411,7 +410,6 @@ function bootstrap() {
 		setFeedback("Progress restored from your last session.");
 	}
 
-	// Keep world percentage refreshed while app is open.
 	setInterval(refreshGlobalPercent, 60000);
 }
 

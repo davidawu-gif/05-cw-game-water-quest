@@ -21,6 +21,8 @@ const state = {
 	crops: new Array(MAX_CROPS).fill(null)
 };
 
+let refreshNonce = 0;
+
 const els = {
 	globalPercent: document.getElementById("globalPercent"),
 	worldCondition: document.getElementById("worldCondition"),
@@ -351,6 +353,8 @@ function resetGame() {
 		return;
 	}
 
+	refreshNonce += 1;
+
 	state.started = false;
 	state.simulatedNow = Date.now();
 	state.globalNoAccessPercent = 26;
@@ -361,7 +365,7 @@ function resetGame() {
 	state.firstWitherMessageShown = false;
 	state.crops = new Array(MAX_CROPS).fill(null);
 
-	localStorage.removeItem(STORAGE_KEY);
+	saveState();
 	setFeedback("Game reset complete. Press Load Garden to start again.");
 	renderAll();
 }
@@ -371,7 +375,12 @@ async function fetchGlobalNoAccessPercent() {
 }
 
 async function refreshGlobalPercent() {
+	const nonceAtStart = refreshNonce;
 	const fetchedPercent = await fetchGlobalNoAccessPercent();
+	if (nonceAtStart !== refreshNonce) {
+		return;
+	}
+
 	const clamped = Math.max(0, Math.min(100, Number(fetchedPercent) || 26));
 
 	state.previousGlobalNoAccessPercent = state.globalNoAccessPercent;

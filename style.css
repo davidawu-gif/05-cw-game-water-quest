@@ -89,6 +89,7 @@ h1 {
 .start-btn,
 .tool-btn,
 #advanceDayBtn,
+#resetGameBtn,
 #refreshGlobalBtn {
 	border: 0;
 	border-radius: 12px;
@@ -111,6 +112,7 @@ h1 {
 .start-btn:hover,
 .tool-btn:hover,
 #advanceDayBtn:hover,
+#resetGameBtn:hover,
 #refreshGlobalBtn:hover {
 	transform: translateY(-2px);
 }
@@ -181,6 +183,12 @@ h1 {
 #advanceDayBtn {
 	padding: 10px 12px;
 	background: var(--cw-orange);
+	color: #fff;
+}
+
+#resetGameBtn {
+	padding: 10px 12px;
+	background: #f5402c;
 	color: #fff;
 }
 

@@ -30,6 +30,7 @@ const els = {
 	startBtn: document.getElementById("startBtn"),
 	donateBtn: document.getElementById("donateBtn"),
 	advanceDayBtn: document.getElementById("advanceDayBtn"),
+	resetGameBtn: document.getElementById("resetGameBtn"),
 	refreshGlobalBtn: document.getElementById("refreshGlobalBtn"),
 	feedbackText: document.getElementById("feedbackText"),
 	hintText: document.getElementById("hintText"),
@@ -344,6 +345,27 @@ function advanceDay() {
 	renderAll();
 }
 
+function resetGame() {
+	const shouldReset = window.confirm("Reset all game progress? This clears score, crops, and saved progress.");
+	if (!shouldReset) {
+		return;
+	}
+
+	state.started = false;
+	state.simulatedNow = Date.now();
+	state.globalNoAccessPercent = 26;
+	state.previousGlobalNoAccessPercent = 26;
+	state.score = 0;
+	state.donations = 0;
+	state.activeTool = "seed";
+	state.firstWitherMessageShown = false;
+	state.crops = new Array(MAX_CROPS).fill(null);
+
+	localStorage.removeItem(STORAGE_KEY);
+	setFeedback("Game reset complete. Press Load Garden to start again.");
+	renderAll();
+}
+
 async function fetchGlobalNoAccessPercent() {
 	return 26;
 }
@@ -390,6 +412,7 @@ function wireEvents() {
 	});
 
 	els.advanceDayBtn.addEventListener("click", advanceDay);
+	els.resetGameBtn.addEventListener("click", resetGame);
 	els.refreshGlobalBtn.addEventListener("click", async () => {
 		await refreshGlobalPercent();
 		setFeedback("Global percentage refreshed.");

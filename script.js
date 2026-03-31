@@ -12,6 +12,9 @@ const demoPlayers = [
 const state = {
 	started: false,
 	simulatedNow: Date.now(),
+	activeDifficulty: "normal",
+	baseGlobalNoAccessPercent: 26,
+	previousBaseGlobalNoAccessPercent: 26,
 	globalNoAccessPercent: 26,
 	previousGlobalNoAccessPercent: 26,
 	score: 0,
@@ -29,11 +32,14 @@ const els = {
 	simDate: document.getElementById("simDate"),
 	scoreValue: document.getElementById("scoreValue"),
 	donationValue: document.getElementById("donationValue"),
+	milestoneMessage: document.getElementById("milestoneMessage"),
 	startBtn: document.getElementById("startBtn"),
 	donateBtn: document.getElementById("donateBtn"),
 	advanceDayBtn: document.getElementById("advanceDayBtn"),
+	givePointsBtn: document.getElementById("givePointsBtn"),
 	resetGameBtn: document.getElementById("resetGameBtn"),
 	refreshGlobalBtn: document.getElementById("refreshGlobalBtn"),
+	difficultyButtons: Array.from(document.querySelectorAll(".difficulty-btn")),
 	feedbackText: document.getElementById("feedbackText"),
 	hintText: document.getElementById("hintText"),
 	gardenGrid: document.getElementById("gardenGrid"),
@@ -56,7 +62,10 @@ function loadState() {
 		const parsed = JSON.parse(saved);
 		state.started = Boolean(parsed.started);
 		state.simulatedNow = Number(parsed.simulatedNow) || Date.now();
-		state.globalNoAccessPercent = Number(parsed.globalNoAccessPercent) || 26;
+		state.activeDifficulty = ["easy", "normal", "hard"].includes(parsed.activeDifficulty) ? parsed.activeDifficulty : "normal";
+		state.baseGlobalNoAccessPercent = Number(parsed.baseGlobalNoAccessPercent) || Number(parsed.globalNoAccessPercent) || 26;
+		state.previousBaseGlobalNoAccessPercent = Number(parsed.previousBaseGlobalNoAccessPercent) || state.baseGlobalNoAccessPercent;
+		state.globalNoAccessPercent = Number(parsed.globalNoAccessPercent) || state.baseGlobalNoAccessPercent;
 		state.previousGlobalNoAccessPercent = Number(parsed.previousGlobalNoAccessPercent) || state.globalNoAccessPercent;
 		state.score = Number(parsed.score) || 0;
 		state.donations = Number(parsed.donations) || 0;
@@ -109,20 +118,21 @@ function getToolHint() {
 }
 
 function updateWorldConditionText() {
-	const current = state.globalNoAccessPercent;
-	const previous = state.previousGlobalNoAccessPercent;
+	const current = state.baseGlobalNoAccessPercent;
+	const previous = state.previousBaseGlobalNoAccessPercent;
+	const difficultyLabel = state.activeDifficulty[0].toUpperCase() + state.activeDifficulty.slice(1);
 
 	if (current > previous) {
-		els.worldCondition.textContent = "Global alert: access worsened since last check. Everybody loses when this rises.";
+		els.worldCondition.textContent = `Global alert: access worsened since last check. Difficulty: ${difficultyLabel}.`;
 		return;
 	}
 
 	if (current < previous) {
-		els.worldCondition.textContent = "Global win: more people have clean water than last check.";
+		els.worldCondition.textContent = `Global win: more people have clean water than last check. Difficulty: ${difficultyLabel}.`;
 		return;
 	}
 
-	els.worldCondition.textContent = "No global change since last check. Keep awareness growing.";
+	els.worldCondition.textContent = `No global change since last check. Difficulty: ${difficultyLabel}.`;
 }
 
 function createTile(index) {
@@ -205,18 +215,51 @@ function renderStatus() {
 	els.simDate.textContent = formatDate(state.simulatedNow);
 	els.scoreValue.textContent = String(state.score);
 	els.donationValue.textContent = String(state.donations);
+	els.milestoneMessage.textContent = getMilestoneMessage(state.score);
 	els.hintText.textContent = getToolHint();
 	updateWorldConditionText();
 
 	els.toolButtons.forEach((btn) => {
 		btn.classList.toggle("active", btn.dataset.tool === state.activeTool);
 	});
+
+	els.difficultyButtons.forEach((btn) => {
+		btn.classList.toggle("active", btn.dataset.difficulty === state.activeDifficulty);
+	});
+}
+
+function getMilestoneMessage(score) {
+	if (score >= 100) {
+		return "Milestone reached: 100 points! You are a clean water champion.";
+	}
+	if (score >= 50) {
+		return "Milestone reached: 50 points! Your garden impact is growing.";
+	}
+	if (score >= 10) {
+		return "Milestone reached: 10 points! Great start supporting awareness.";
+	}
+	return "Next milestone: 10 points.";
 }
 
 function renderAll() {
 	renderStatus();
 	renderGarden();
 	renderLeaderboards();
+}
+
+function adjustedNoAccessPercent(basePercent, difficulty) {
+	if (difficulty === "easy") {
+		return Math.round(basePercent * 0.5);
+	}
+	if (difficulty === "hard") {
+		return Math.round(basePercent * 1.5);
+	}
+	return Math.round(basePercent);
+}
+
+function recalculateEffectiveNoAccessPercent() {
+	const adjusted = adjustedNoAccessPercent(state.baseGlobalNoAccessPercent, state.activeDifficulty);
+	state.globalNoAccessPercent = Math.max(0, Math.min(100, adjusted));
 }
 
 function plantSeed(index) {
@@ -347,6 +390,13 @@ function advanceDay() {
 	renderAll();
 }
 
+function giveDebugPoints() {
+	state.score += 10;
+	saveState();
+	renderAll();
+	setFeedback("Debug reward applied: +10 points.");
+}
+
 function resetGame() {
 	const shouldReset = window.confirm("Reset all game progress? This clears score, crops, and saved progress.");
 	if (!shouldReset) {
@@ -357,6 +407,9 @@ function resetGame() {
 
 	state.started = false;
 	state.simulatedNow = Date.now();
+	state.activeDifficulty = "normal";
+	state.baseGlobalNoAccessPercent = 26;
+	state.previousBaseGlobalNoAccessPercent = 26;
 	state.globalNoAccessPercent = 26;
 	state.previousGlobalNoAccessPercent = 26;
 	state.score = 0;
@@ -383,10 +436,25 @@ async function refreshGlobalPercent() {
 
 	const clamped = Math.max(0, Math.min(100, Number(fetchedPercent) || 26));
 
+	state.previousBaseGlobalNoAccessPercent = state.baseGlobalNoAccessPercent;
+	state.baseGlobalNoAccessPercent = clamped;
 	state.previousGlobalNoAccessPercent = state.globalNoAccessPercent;
-	state.globalNoAccessPercent = clamped;
+	recalculateEffectiveNoAccessPercent();
 	saveState();
 	renderAll();
+}
+
+function setDifficulty(difficulty) {
+	if (!["easy", "normal", "hard"].includes(difficulty)) {
+		return;
+	}
+
+	state.activeDifficulty = difficulty;
+	state.previousGlobalNoAccessPercent = state.globalNoAccessPercent;
+	recalculateEffectiveNoAccessPercent();
+	saveState();
+	renderAll();
+	setFeedback(`Difficulty set to ${difficulty}. Wither chance is now ${state.globalNoAccessPercent}%.`);
 }
 
 function setTool(tool) {
@@ -421,10 +489,15 @@ function wireEvents() {
 	});
 
 	els.advanceDayBtn.addEventListener("click", advanceDay);
+	els.givePointsBtn.addEventListener("click", giveDebugPoints);
 	els.resetGameBtn.addEventListener("click", resetGame);
 	els.refreshGlobalBtn.addEventListener("click", async () => {
 		await refreshGlobalPercent();
 		setFeedback("Global percentage refreshed.");
+	});
+
+	els.difficultyButtons.forEach((btn) => {
+		btn.addEventListener("click", () => setDifficulty(btn.dataset.difficulty));
 	});
 
 	els.toolButtons.forEach((btn) => {
@@ -435,6 +508,7 @@ function wireEvents() {
 function bootstrap() {
 	loadState();
 	initializeGardenSlots();
+	recalculateEffectiveNoAccessPercent();
 	wireEvents();
 	renderAll();
 

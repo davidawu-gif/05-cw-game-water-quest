@@ -37,7 +37,7 @@ Fonts:
 body {
 	margin: 0;
 	min-height: 100vh;
-	font-family: "Nunito", sans-serif;
+	font-family: Georgia, "Times New Roman", Times, serif;
 	font-size: 16px;
 	line-height: 1.35;
 	color: var(--cw-dark);
@@ -74,7 +74,7 @@ h1,
 h2,
 h3 {
 	margin: 0;
-	font-family: "Space Grotesk", sans-serif;
+	font-family: Georgia, "Times New Roman", Times, serif;
 }
 
 h1 {
@@ -89,6 +89,7 @@ h1 {
 .start-btn,
 .tool-btn,
 #advanceDayBtn,
+#givePointsBtn,
 #resetGameBtn,
 #refreshGlobalBtn {
 	border: 0;
@@ -112,6 +113,7 @@ h1 {
 .start-btn:hover,
 .tool-btn:hover,
 #advanceDayBtn:hover,
+#givePointsBtn:hover,
 #resetGameBtn:hover,
 #refreshGlobalBtn:hover {
 	transform: translateY(-2px);
@@ -144,6 +146,13 @@ h1 {
 	padding: 10px 14px;
 	background: var(--cw-blue);
 	color: #fff;
+}
+
+.milestone-message {
+	margin: 10px 0 0;
+	font-weight: 700;
+	color: #15444c;
+	min-height: 22px;
 }
 
 .toolbar {
@@ -180,9 +189,46 @@ h1 {
 	flex-wrap: wrap;
 }
 
+.difficulty-wrap {
+	margin-top: 8px;
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.difficulty-btn {
+	border: 0;
+	border-radius: 12px;
+	font-family: inherit;
+	font-weight: 800;
+	font-size: 0.95rem;
+	min-height: 44px;
+	padding: 10px 12px;
+	flex: 1 1 120px;
+	background: #ecf2f7;
+	color: var(--cw-dark);
+	cursor: pointer;
+	transition: transform 0.15s ease;
+}
+
+.difficulty-btn:hover {
+	transform: translateY(-2px);
+}
+
+.difficulty-btn.active {
+	background: var(--cw-green);
+	color: #fff;
+}
+
 #advanceDayBtn {
 	padding: 10px 12px;
 	background: var(--cw-orange);
+	color: #fff;
+}
+
+#givePointsBtn {
+	padding: 10px 12px;
+	background: var(--cw-blue);
 	color: #fff;
 }
 

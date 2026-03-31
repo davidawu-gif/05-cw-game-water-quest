@@ -5,9 +5,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta name="theme-color" content="#ffc907" />
 	<title>Global Garden</title>
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-	<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
 	<link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -31,6 +28,7 @@
 			<p><strong>Lifetime Score:</strong> <span id="scoreValue">0</span></p>
 			<p><strong>Donation Clicks:</strong> <span id="donationValue">0</span></p>
 			<button id="startBtn" class="start-btn" type="button">Load Garden</button>
+			<p id="milestoneMessage" class="milestone-message" role="status" aria-live="polite"></p>
 		</section>
 
 		<section class="garden-card">
@@ -45,8 +43,15 @@
 
 			<div class="debug-wrap">
 				<button id="advanceDayBtn" type="button">Debug: Advance +24h</button>
+				<button id="givePointsBtn" type="button">Debug: +10 Points</button>
 				<button id="resetGameBtn" type="button">Debug: Reset Game</button>
 				<button id="refreshGlobalBtn" type="button">Refresh Global %</button>
+			</div>
+
+			<div class="difficulty-wrap" aria-label="Difficulty controls">
+				<button class="difficulty-btn" data-difficulty="easy" type="button">Easy (50%)</button>
+				<button class="difficulty-btn active" data-difficulty="normal" type="button">Normal (100%)</button>
+				<button class="difficulty-btn" data-difficulty="hard" type="button">Hard (150%)</button>
 			</div>
 
 			<p class="hint" id="hintText">Select a tool, then tap a garden tile.</p>
